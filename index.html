@@ -5,12 +5,26 @@
     <title>Hello World!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
+    <ul class="nav flex-column mt-4 text-center">
+      <li class="nav-item  my-1">
+        <button class="btn btn-primary" onclick="switchTab(1, 'https\:\/\/www.messenger.com\/')"">1</button>
+      </li>
+      <li class="nav-item my-1">
+        <button class="btn btn-primary" onclick="switchTab(2, '')">2</button>
+      </li>
+      <li class="nav-item my-1">
+        <button class="btn btn-primary" onclick="switchTab(3, '')">3</button>
+      </li>
+      <li class="nav-item my-1">
+        <button class="btn btn-primary" onclick="switchTab(4, '')">4</button>
+      </li>
+    </ul>
 
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
