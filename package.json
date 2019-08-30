@@ -5,9 +5,12 @@
   "main": "main.js",
   "scripts": {
     "postinstall": "install-app-deps",
-    "start": "npm install && electron .",
+    "start": "npm install && npm run build && electron ./dist/main.js",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "build": {
     "appId": "yourappid",
@@ -38,6 +41,8 @@
   },
   "devDependencies": {
     "electron": "^6.0.1",
-    "electron-builder": "^21.2.0"
+    "electron-builder": "^21.2.0",
+    "tslint": "^5.19.0",
+    "typescript": "^2.8.3"
   }
 }
