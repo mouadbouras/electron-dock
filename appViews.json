@@ -1,0 +1,17 @@
+[
+    {
+        "viewName": "discord",
+        "url": "https://discordapp.com/channels/@me",
+        "icon": "./content/images/discord.png"
+    },
+    {
+        "viewName": "messenger",
+        "url": "https://messenger.com",
+        "icon": "./content/images/messenger.png"
+    },
+    {
+        "viewName": "whatsapp",
+        "url": "https://web.whatsapp.com/",
+        "icon": "./content/images/whatsapp.png"
+    }
+]

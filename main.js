@@ -1,11 +1,20 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, BrowserView} = require('electron')
 const path = require('path')
+const fs = require("fs");
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let views = new Array();
+const appViews = readJsonFile('./appViews.json');
+
+console.log(appViews[0]);
+  function createViews () {
+    browserWindow.addBrowserView(browserView)
+    browserWindow.removeBrowserView(browserView)
+  }
 
 function createWindow () {
   // Create the browser window.
@@ -19,23 +28,8 @@ function createWindow () {
     }
   })
 
-  function createViews () {
-    browserWindow.addBrowserView(browserView)
-    browserWindow.removeBrowserView(browserView)
-  }
-
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
-  //childWindow.loadFile('index.html')
-  //mainWindow.loadURL('https://discordapp.com/channels/@me')
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
-  // let menuView = new BrowserView()
-  // mainWindow.setBrowserView(menuView)
-  // menuView.setBounds({ x: 0, y: 0, width: 100, height: 800 })
-  // menuView.webContents.loadFile('index.html')
-  // menuView.webContents.openDevTools()
 
   views[0] = new BrowserView()
   mainWindow.addBrowserView(views[0])
@@ -49,14 +43,10 @@ function createWindow () {
   views[1].setBounds({ x: 100, y: 22, width: 1100 , height: 800 })
   views[1].webContents.loadURL('https://portal.azure.com/#home')
 
- 
-  // setTimeout(function(){  mainWindow.setBrowserView(appView1); }, 10000);
-  // setTimeout(function(){  mainWindow.setBrowserView(appView2); }, 20000);
-
-  // appView2.webContents.loadURL('https://discordapp.com/channels/@me')
   console.log('done');
 
-  //appView.webContents.openDevTools()
+  // send views to renderer
+  mainWindow.webContents.send('appViews', appViews);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -65,6 +55,10 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+}
+
+function readJsonFile(path){
+  return JSON.parse(fs.readFileSync(path));
 }
 
 // This method will be called when Electron has finished
