@@ -6,8 +6,8 @@
 var switchView = require('electron').remote.require('./main').switchView;
 console.log(tabUrl);
 
-function switchTab(tabId, tabUrl)
+function switchTab(tabId)
 {
-    switchView(tabId, tabUrl);
+    switchView(tabId);
     console.log(tabUrl);
 }
