@@ -10,16 +10,19 @@ exports.__esModule = true;
 var electron_1 = require("electron");
 var path = __importStar(require("path"));
 var configuration_service_1 = require("./services/configuration.service");
-var configurationService = new configuration_service_1.ConfigurationService();
+var configurationService = new configuration_service_1.ConfigurationService(electron_1.app.getAppPath());
 var mainWindow;
+var appViewWindow;
 var views;
 var appViews;
+var appConfig;
 function createWindow() {
+    appConfig = configurationService.getConfig();
     appViews = configurationService.getAppViews();
     // Create the browser window.
     mainWindow = new electron_1.BrowserWindow({
-        height: 800,
-        width: 1200,
+        height: appConfig.window.height,
+        width: appConfig.window.width,
         icon: "./AppIcon.icns",
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
@@ -29,18 +32,9 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadFile(path.join(__dirname, "../index.html"));
     mainWindow.webContents.openDevTools({ mode: "undocked" });
-    views = new Array();
-    views[0] = new electron_1.BrowserView();
-    mainWindow.addBrowserView(views[0]);
-    views[0].setBounds({ x: 100, y: 22, width: 1100, height: 800 });
-    views[0].webContents.loadURL("https://slack.com/signin");
-    views[1] = new electron_1.BrowserView();
-    mainWindow.addBrowserView(views[1]);
-    views[1].setBounds({ x: 100, y: 22, width: 1100, height: 800 });
-    views[1].webContents.loadURL("https://portal.azure.com/#home");
-    // send views to renderer
-    //mainWindow.webContents.send("appViews", appViews);
+    renderViews();
     mainWindow.webContents.on('did-finish-load', function () {
+        // send views to renderer
         mainWindow.webContents.send("appViews", appViews);
     });
     // Emitted when the window is closed.
@@ -70,13 +64,48 @@ electron_1.app.on("activate", function () {
         createWindow();
     }
 });
-electron_1.ipcMain.on("switch-view", function (event, arg) {
-    console.log("switch-it-up" + arg); // prints "ping"
-});
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-// exports.switchView = function switchView(tabId: number) {
-//   // mainWindow.setBrowserView(views[tabId-1]);
-//   console.log(tabId);
-// };
+electron_1.ipcMain.on("switch-view", function (event, arg) {
+    if (views.hasOwnProperty(arg)) {
+        mainWindow.setBrowserView(views[arg]);
+    }
+});
+electron_1.ipcMain.on("edit-view", function (event, arg) {
+    configurationService.setAppView(arg);
+    appViewWindow.close();
+});
+electron_1.ipcMain.on("open-view-editor", function (event, arg) {
+    openEditViewWindow(arg);
+});
+function renderViews() {
+    views = {};
+    for (var _i = 0, appViews_1 = appViews; _i < appViews_1.length; _i++) {
+        var view = appViews_1[_i];
+        views[view.viewName] = new electron_1.BrowserView();
+        mainWindow.addBrowserView(views[view.viewName]);
+        views[view.viewName].setBounds({ x: appConfig.view.x,
+            y: appConfig.view.y,
+            width: appConfig.view.width,
+            height: appConfig.view.height
+        });
+        views[view.viewName].webContents.loadURL(view.url);
+    }
+}
+function openEditViewWindow(appView) {
+    appViewWindow = new electron_1.BrowserWindow({
+        height: appConfig.appViewPopup.height,
+        width: appConfig.appViewPopup.width,
+        webPreferences: {
+            preload: path.join(__dirname, "preload.js"),
+            nodeIntegration: true
+        }
+    });
+    appViewWindow.loadFile(path.join(__dirname, "../appView.html"));
+    //appViewWindow.webContents.openDevTools({mode: "undocked"});
+    appViewWindow.webContents.on('did-finish-load', function () {
+        // send views to renderer
+        appViewWindow.webContents.send("edit-view", appView);
+    });
+}
 //# sourceMappingURL=main.js.map

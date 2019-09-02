@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Edit view</title>
+  </head>
+  <body>
+    <div class="main-div align-middle">
+        <form class="mt-5 ">
+            <div class="form-group row">
+              <label for="viewName" class="col-sm-3 col-form-label">App Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="app-name" placeholder="Name">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="" class="col-sm-3 col-form-label">URL </label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="app-url" placeholder="http://www.google.com/">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="appIcon" class="col-sm-3 col-form-label">Icon (path/url)</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="app-icon" placeholder="https://store-images.s-microsoft.com/image/apps.6007.14599852896494176.6a23f863-5fc1-443c-9578-78937fdfd4ae.3596bc0f-d22d-4665-8f24-73e9884bcb94?mode=scale&q=90&h=1080&w=1920">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-12 mt-3 text-center">
+                <button id="btn-save" type="button" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </form>
+    </div>
+
+  <script>
+    require('./dist/renderers/app-view.renderer.js');
+  </script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="./content/styles/appview.css">
+  <link rel="stylesheet" href="./content/styles/bootstrap-dark.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

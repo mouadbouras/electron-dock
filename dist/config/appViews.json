@@ -10,8 +10,13 @@
         "icon": "./content/images/messenger.png"
     },
     {
-        "viewName": "whatsapp",
-        "url": "https://web.whatsapp.com/",
-        "icon": "./content/images/whatsapp.png"
+        "viewName": "facebook",
+        "url": "https://facebook.com/",
+        "icon": "./content/images/facebook.png"
+    },
+    {
+        "viewName": "youtube",
+        "url": "https://youtube.com/",
+        "icon": "./content/images/youtube.png"
     }
 ]
