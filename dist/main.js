@@ -31,7 +31,7 @@ function createWindow() {
     });
     // and load the index.html of the app.
     mainWindow.loadFile(path.join(__dirname, "../index.html"));
-    mainWindow.webContents.openDevTools({ mode: "undocked" });
+    //mainWindow.webContents.openDevTools({mode: "undocked"});
     renderViews();
     mainWindow.webContents.on('did-finish-load', function () {
         // send views to renderer

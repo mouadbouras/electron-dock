@@ -2,18 +2,28 @@
   "name": "electron-dock",
   "version": "1.0.0",
   "description": "electron-dock",
-  "main": "main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "npm install && npm run build && electron ./dist/main.js",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder",
+    "dist": "electron-builder ",
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "build": {
     "appId": "yourappid",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "index.html",
+      "appview.html",
+      "./content/**/*",
+      "./dist/main.js",
+      "./dist/**/*"
+    ],
     "dmg": {
       "contents": [
         {
