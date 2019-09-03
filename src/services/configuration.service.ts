@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import AppConfigs from "../config/appConfig.json";
-import AppViews from "../config/appViews.json";
-import { AppConfig } from "../model/app-config.model";
-import { AppView } from "../model/app-view.model";
+import AppConfigs from "../configs/appConfig.json";
+import AppViews from "../configs/appViews.json";
+import { AppConfig } from "../models/app-config.model";
+import { AppView } from "../models/app-view.model";
 
 export class ConfigurationService {
     private appPath: string;

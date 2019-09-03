@@ -1,7 +1,7 @@
 import { app, BrowserView, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
-import { AppConfig } from "./model/app-config.model";
-import { AppView } from "./model/app-view.model";
+import { AppConfig } from "./models/app-config.model";
+import { AppView } from "./models/app-view.model";
 import { ConfigurationService } from "./services/configuration.service";
 
 const configurationService = new ConfigurationService(app.getAppPath());
@@ -11,6 +11,7 @@ let appViewWindow: BrowserWindow;
 let views: { [id: string]: BrowserView; };
 let appViews: AppView[];
 let appConfig: AppConfig;
+const heightOffset = 22;
 
 function createWindow() {
   appConfig = configurationService.getConfig();
@@ -18,9 +19,10 @@ function createWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    title: "Distractions",
     height: appConfig.window.height,
     width: appConfig.window.width,
-    icon: "./AppIcon.icns",
+    icon: "distractions.icns",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -28,12 +30,12 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "../index.html"));
+  mainWindow.loadFile(path.join(__dirname, "./contents/index.html"));
   //mainWindow.webContents.openDevTools({mode: "undocked"});
 
   renderViews();
 
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on("did-finish-load", () => {
     // send views to renderer
     mainWindow.webContents.send("appViews", appViews);
   });
@@ -76,6 +78,13 @@ app.on("activate", () => {
 ipcMain.on("switch-view", (event, arg) => {
   if (views.hasOwnProperty(arg)) {
     mainWindow.setBrowserView(views[arg]);
+    views[arg].setBounds(
+      { x: appConfig.view.x ,
+        y: appConfig.view.y ,
+        height: mainWindow.getBounds().height - heightOffset,
+        width: mainWindow.getBounds().width - appConfig.view.x,
+      },
+    );
   }
 });
 
@@ -96,10 +105,16 @@ function renderViews(): void {
     views[view.viewName].setBounds(
       { x: appConfig.view.x ,
         y: appConfig.view.y ,
-        width: appConfig.view.width ,
-        height: appConfig.view.height
-      }
+        height: mainWindow.getBounds().height - heightOffset,
+        width: mainWindow.getBounds().width - appConfig.view.x,
+      },
     );
+    views[view.viewName].setAutoResize({
+      height: true,
+      width: true,
+      horizontal: true,
+      vertical: true,
+    });
     views[view.viewName].webContents.loadURL(view.url);
   }
 }
@@ -114,10 +129,10 @@ function openEditViewWindow(appView: AppView): void {
     },
   });
 
-  appViewWindow.loadFile(path.join(__dirname, "../appView.html"));
-  //appViewWindow.webContents.openDevTools({mode: "undocked"});
+  appViewWindow.loadFile(path.join(__dirname, "./contents/appView.html"));
+  // appViewWindow.webContents.openDevTools({mode: "undocked"});
 
-  appViewWindow.webContents.on('did-finish-load', () => {
+  appViewWindow.webContents.on("did-finish-load", () => {
     // send views to renderer
     appViewWindow.webContents.send("edit-view", appView);
   });

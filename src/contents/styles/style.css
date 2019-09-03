@@ -18,5 +18,6 @@ body{
 }
 
 .btn-circle:hover,  .btn-circle:active{
-    background-color: #3d3d3d;
+    /* background-color: #3d3d3d; */
+    background-color: #717171;
 }

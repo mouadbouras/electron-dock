@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { AppView } from "../model/app-view.model";
+import { AppView } from "../models/app-view.model";
 import * as documentHelper from "../services/htmldocument.service";
 
 ipcRenderer.on("appViews", renderViews);

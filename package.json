@@ -1,14 +1,17 @@
 {
-  "name": "electron-dock",
+  "name": "Distractions",
   "version": "1.0.0",
-  "description": "electron-dock",
+  "description": "Distractions-App",
   "main": "./dist/main.js",
+  "icon": "distractions.icns",
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "npm install && npm run build && electron ./dist/main.js",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder ",
-    "build": "tsc",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder ",
+    "copy-folders": "rm -r -f dist && mkdir dist dist/contents dist/configs && cp -r src/contents dist/ && cp -r src/configs dist/ && npm run copy-files",
+    "copy-files": "cp src/distractions.icns dist/",
+    "build": "npm run copy-folders && tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json"
   },
@@ -18,12 +21,12 @@
       "output": "release"
     },
     "files": [
-      "index.html",
-      "appview.html",
-      "./content/**/*",
-      "./dist/main.js",
-      "./dist/**/*"
+      "./dist/**/*",
+      "./distractions.icns"
     ],
+    "mac": {
+      "icon": "./dist/distractions.icns"
+    },
     "dmg": {
       "contents": [
         {
@@ -31,7 +34,7 @@
           "y": 150
         },
         {
-          "x": 240,
+          "x": 440,
           "y": 150,
           "type": "link",
           "path": "/Applications"

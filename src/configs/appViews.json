@@ -2,21 +2,21 @@
     {
         "viewName": "discord",
         "url": "https://discordapp.com/channels/@me",
-        "icon": "./content/images/discord.png"
+        "icon": "./images/discord.png"
     },
     {
         "viewName": "messenger",
         "url": "https://messenger.com",
-        "icon": "./content/images/messenger.png"
+        "icon": "./images/messenger.png"
     },
     {
         "viewName": "facebook",
         "url": "https://facebook.com/",
-        "icon": "./content/images/facebook.png"
+        "icon": "./images/facebook.png"
     },
     {
         "viewName": "youtube",
         "url": "https://youtube.com/",
-        "icon": "./content/images/youtube.png"
+        "icon": "./images/youtube.png"
     }
 ]

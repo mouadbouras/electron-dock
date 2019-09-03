@@ -1,8 +1,8 @@
-import { ipcRenderer, app } from "electron";
+import { ipcRenderer } from "electron";
+import { AppView } from "../models/app-view.model";
 import * as documentHelper from "../services/htmldocument.service";
-import { AppView } from "../model/app-view.model";
 
-document.getElementById('btn-save').onclick  = () => { save(); };
+document.getElementById("btn-save").onclick  = () => { save(); };
 ipcRenderer.on("edit-view", renderView);
 
 function renderView(event: any, appView: AppView): void {
@@ -15,7 +15,7 @@ function save(): void {
     ipcRenderer.send("edit-view", {
         viewName : documentHelper.getInputElementById("app-name").value,
         url : documentHelper.getInputElementById("app-url").value,
-        icon : documentHelper.getInputElementById("app-icon").value
+        icon : documentHelper.getInputElementById("app-icon").value,
     } as AppView);
 }
 
