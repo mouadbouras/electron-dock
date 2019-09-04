@@ -8,6 +8,10 @@ function switchView(viewName: string): void {
     ipcRenderer.send("switch-view", viewName);
 }
 
+function showContextMenu(viewName: string): void {
+    ipcRenderer.send("open-context-menu", viewName);
+}
+
 function renderViews(event: any, appViews: AppView[]): void {
     documentHelper.getElementById("app-menu").innerHTML = "";
     for (const view of appViews) {
@@ -17,11 +21,12 @@ function renderViews(event: any, appViews: AppView[]): void {
             "<button id=" + btnName +
                 " class='btn btn-circle'" +
                 "style='background-image: url(\"" + view.icon + "\") !important'>" +
-            "</button>" +
+            "</button>" + 
         "</li>";
     }
     for (const view of appViews) {
         const btnName = "btn-" + view.viewName;
-        documentHelper.getElementById(btnName).onclick  = () => { switchView(view.viewName); };
+        documentHelper.getElementById(btnName).onclick = (e) => switchView(view.viewName);
+        documentHelper.getElementById(btnName).oncontextmenu = (e) => showContextMenu(view.viewName);
     }
 }

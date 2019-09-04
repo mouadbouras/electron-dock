@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as path from "path";
 import AppConfigs from "../configs/appConfig.json";
 import AppViews from "../configs/appViews.json";
 import { AppConfig } from "../models/app-config.model";
@@ -11,7 +10,7 @@ export class ConfigurationService {
 
     public constructor(appPath: string) {
         this.appPath = appPath;
-        this.appViewsPath = this.appPath + "/config/appViews.json";
+        this.appViewsPath = this.appPath + "/configs/appViews.json";
     }
 
     public getAppViews(): AppView[] {
@@ -25,7 +24,7 @@ export class ConfigurationService {
     public setAppView(appView: AppView): void {
         // @ts-ignore
         const index = AppViews.findIndex((v: AppView) => v.viewName === appView.viewName);
-        if (index > 0) {
+        if (index >= 0) {
             AppViews[index] = appView;
         } else {
             AppViews.push(appView);
