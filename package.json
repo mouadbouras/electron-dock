@@ -4,6 +4,7 @@
   "description": "Distractions-App",
   "main": "./dist/main.js",
   "icon": "distractions.icns",
+  "authon": "Mouad Bouras",
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "npm install && npm run build && electron ./dist/main.js",
