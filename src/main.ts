@@ -70,18 +70,18 @@ app.on("ready", createWindow);
 app.on("window-all-closed", () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") {
+  // if (process.platform !== "darwin") {
     app.quit();
-  }
+  // }
 });
 
-// app.on("activate", () => {
-//   // On OS X it"s common to re-create a window in the app when the
-//   // dock icon is clicked and there are no other windows open.
-//   if (mainWindow === null) {
-//     createWindow();
-//   }
-// });
+app.on("activate", () => {
+  // On OS X it"s common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
 
 
 // In this file you can include the rest of your app"s specific main process
@@ -165,11 +165,11 @@ function refreshButtons(): void {
 function handleButtonContextMenu(clickedItem: string): void {
   const selectedView = menuService.ConsumeContextMenu();
   switch (clickedItem) {
-    case "Mute" : views[selectedView].webContents.setAudioMuted(true);
+    case "Mute" : appViewService.toggleMuteAppView(selectedView, true);
     break;
-    case "Unmute" : views[selectedView].webContents.setAudioMuted(false);
+    case "Unmute" : appViewService.toggleMuteAppView(selectedView, false);
     break;
-    case "Back" : views[selectedView].webContents.goBack();
+    case "Back" : appViewService.backAppView(selectedView);
     break;
     case "Edit" : openEditViewWindow(appViews.find((view) => view.viewName === selectedView));
     break;

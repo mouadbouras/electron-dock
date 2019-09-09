@@ -58,6 +58,14 @@ export class AppViewService {
         this.switchView(viewName);
     }
 
+    public toggleMuteAppView(viewName: string, mute: boolean): void {
+        this.views[viewName].webContents.setAudioMuted(mute);
+    }
+
+    public backAppView(viewName: string): void {
+        this.views[viewName].webContents.goBack();
+    }
+
     public deleteAppView(viewName: string, nextView: string): void {
         this.mainWindow.removeBrowserView(this.views[viewName]);
         delete this.views[viewName];
