@@ -5,10 +5,11 @@ import { AppConfig } from "./models/app-config.model";
 import { AppView } from "./models/app-view.model";
 import { ConfigurationService } from "./services/configuration.service";
 import { MenuService } from "./services/menu.service";
+import { AppViewService } from "./services/appview.service";
 
 const configurationService = new ConfigurationService(app.getAppPath());
 const menuService =  new MenuService(handleButtonContextMenu);
-const heightOffset = 22;
+let appViewService: AppViewService;
 
 let mainWindow: BrowserWindow;
 let appViewWindow: BrowserWindow;
@@ -34,9 +35,17 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "./contents/index.html"));
-  mainWindow.webContents.openDevTools({mode: "undocked"});
+  //mainWindow.webContents.openDevTools({mode: "undocked"});
 
-  renderViews();
+  appViewService = new AppViewService(
+    appConfig.view.x,
+    appConfig.view.y,
+    appConfig.view.width,
+    appConfig.view.height,
+    mainWindow,
+  );
+
+  appViewService.renderViews(appViews);
 
   mainWindow.webContents.on("did-finish-load", () => {
     // send views to renderer
@@ -66,84 +75,60 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("activate", () => {
-  // On OS X it"s common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
+// app.on("activate", () => {
+//   // On OS X it"s common to re-create a window in the app when the
+//   // dock icon is clicked and there are no other windows open.
+//   if (mainWindow === null) {
+//     createWindow();
+//   }
+// });
 
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on("switch-view", (event, arg) => {
-  switchView(arg);
+ipcMain.on("switch-view", (event, arg: string) => {
+  appViewService.switchView(arg);
 });
 
 ipcMain.on("edit-view", (event, arg: AppView) => {
-  configurationService.setAppView(arg);
-  appViewWindow.close();
-  renderViews();
-  switchView(arg.viewName);
+  editView(arg);
 });
 
-ipcMain.on("open-view-editor", (event, arg) => {
-  openEditViewWindow(arg);
+ipcMain.on("open-view-editor", (event, arg: AppView) => {
+  if (arg) {
+    openEditViewWindow(arg);
+  } else {
+    openEditViewWindow({
+      viewName: "UniqueViewName",
+      url: "https://www.google.com/",
+      icon: "./images/placeholder.png",
+    } as AppView );
+  }
+});
+
+ipcMain.on("close-view-editor", (event, arg: AppView) => {
+  closeEditViewWindow();
 });
 
 ipcMain.on("open-context-menu", (event, arg) => {
   menuService.ShowContextMenu(arg);
 });
 
-function switchView(viewName: string): void {
-  if (views.hasOwnProperty(viewName)) {
-    mainWindow.setBrowserView(views[viewName]);
-    views[viewName].setBounds(
-      { x: appConfig.view.x ,
-        y: appConfig.view.y ,
-        height: mainWindow.getBounds().height - heightOffset,
-        width: mainWindow.getBounds().width - appConfig.view.x,
-      },
-    );
-  }
-}
-
-function renderViews(): void {
-  views = {};
-  for (const view of appViews) {
-    views[view.viewName] = new BrowserView();
-    mainWindow.addBrowserView(views[view.viewName]);
-    views[view.viewName].setBounds(
-      { x: appConfig.view.x ,
-        y: appConfig.view.y ,
-        height: mainWindow.getBounds().height - heightOffset,
-        width: mainWindow.getBounds().width - appConfig.view.x,
-      },
-    );
-    views[view.viewName].setAutoResize({
-      height: true,
-      width: true,
-      horizontal: true,
-      vertical: true,
-    });
-    views[view.viewName].webContents.loadURL(view.url);
-  }
-}
-
 function openEditViewWindow(appView: AppView): void {
   appViewWindow = new BrowserWindow({
     height: appConfig.appViewPopup.height,
     width: appConfig.appViewPopup.width,
+    parent: mainWindow,
+    show: false,
+    modal: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
     },
-    show: false,
   });
 
-  appViewWindow.loadFile(path.join(__dirname, "./contents/appView.html"));
+  appViewWindow.loadFile(path.join(__dirname, "./contents/appview.html"));
   // appViewWindow.webContents.openDevTools({mode: "undocked"});
 
   appViewWindow.once("ready-to-show", () => {
@@ -156,9 +141,29 @@ function openEditViewWindow(appView: AppView): void {
   });
 }
 
+function closeEditViewWindow() {
+  appViewWindow.close();
+}
+
+function editView(appView: AppView): void {
+  appViews = configurationService.addSertAppView(appView);
+  appViewService.addAppView(appView.viewName, appView.url);
+  appViewWindow.close();
+  refreshButtons();
+}
+
+function deleteView(appView: AppView): void {
+  appViews = configurationService.deleteAppView(appView);
+  appViewService.deleteAppView(appView.viewName, appViews[appViews.length - 1].viewName);
+  refreshButtons();
+}
+
+function refreshButtons(): void {
+  mainWindow.webContents.send("appViews", appViews);
+}
+
 function handleButtonContextMenu(clickedItem: string): void {
   const selectedView = menuService.ConsumeContextMenu();
-  console.log(selectedView);
   switch (clickedItem) {
     case "Mute" : views[selectedView].webContents.setAudioMuted(true);
     break;
@@ -167,6 +172,8 @@ function handleButtonContextMenu(clickedItem: string): void {
     case "Back" : views[selectedView].webContents.goBack();
     break;
     case "Edit" : openEditViewWindow(appViews.find((view) => view.viewName === selectedView));
+    break;
+    case "Delete" : deleteView(appViews.find((view) => view.viewName === selectedView));
     break;
   }
 }

@@ -3,6 +3,8 @@ import { AppView } from "../models/app-view.model";
 import * as documentHelper from "../services/htmldocument.service";
 
 document.getElementById("btn-save").onclick  = () => { save(); };
+document.getElementById("btn-cancel").onclick  = () => { close(); };
+
 ipcRenderer.on("edit-view", renderView);
 
 function renderView(event: any, appView: AppView): void {
@@ -17,5 +19,9 @@ function save(): void {
         url : documentHelper.getInputElementById("app-url").value,
         icon : documentHelper.getInputElementById("app-icon").value,
     } as AppView);
+}
+
+function close(): void {
+    ipcRenderer.send("close-view-editor", null);
 }
 

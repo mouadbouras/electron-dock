@@ -21,7 +21,7 @@ export class ConfigurationService {
         return AppConfigs as AppConfig;
     }
 
-    public setAppView(appView: AppView): void {
+    public addSertAppView(appView: AppView): AppView[] {
         // @ts-ignore
         const index = AppViews.findIndex((v: AppView) => v.viewName === appView.viewName);
         if (index >= 0) {
@@ -29,9 +29,23 @@ export class ConfigurationService {
         } else {
             AppViews.push(appView);
         }
+        this.saveToFile();
+
+        return AppViews as AppView[];
+    }
+
+    public deleteAppView(appView: AppView): AppView[] {
+        // @ts-ignore
+        AppViews = AppViews.filter((v: AppView) => v.viewName !== appView.viewName);
+        this.saveToFile();
+
+        return AppViews as AppView[];
+    }
+
+    private saveToFile(): void {
         fs.writeFile(this.appViewsPath, JSON.stringify(AppViews), (err) => {
             if (err) {
-                console.log("upable to save file : " + err);
+                console.log("unable to save file : " + err);
             }
         });
     }

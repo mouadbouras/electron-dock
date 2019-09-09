@@ -21,7 +21,7 @@ function renderViews(event: any, appViews: AppView[]): void {
             "<button id=" + btnName +
                 " class='btn btn-circle'" +
                 "style='background-image: url(\"" + view.icon + "\") !important'>" +
-            "</button>" + 
+            "</button>" +
         "</li>";
     }
     for (const view of appViews) {
@@ -29,4 +29,6 @@ function renderViews(event: any, appViews: AppView[]): void {
         documentHelper.getElementById(btnName).onclick = (e) => switchView(view.viewName);
         documentHelper.getElementById(btnName).oncontextmenu = (e) => showContextMenu(view.viewName);
     }
+
+    document.getElementById("btn-add").onclick  = () => { ipcRenderer.send("open-view-editor"); };
 }
