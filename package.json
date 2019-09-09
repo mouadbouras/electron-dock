@@ -4,14 +4,15 @@
   "description": "Distractions-App",
   "main": "./dist/main.js",
   "icon": "distractions.icns",
-  "authon": "Mouad Bouras",
+  "author": "Mouad Bouras",
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "npm install && npm run build && electron ./dist/main.js",
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder ",
+    "dist-win": "npm run build && electron-builder --win ",
     "copy-folders": "rm -r -f dist && mkdir dist dist/contents dist/configs && cp -r src/contents dist/ && cp -r src/configs dist/ && npm run copy-files",
-    "copy-files": "cp src/distractions.icns dist/",
+    "copy-files": "cp src/distractions.icns src/distractions.png dist/",
     "build": "npm run copy-folders && tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json"
@@ -22,8 +23,7 @@
       "output": "release"
     },
     "files": [
-      "./dist/**/*",
-      "./distractions.icns"
+      "./dist/**/*"
     ],
     "mac": {
       "icon": "./dist/distractions.icns"
@@ -50,7 +50,7 @@
     },
     "win": {
       "target": "squirrel",
-      "icon": "build/icon.ico"
+      "icon": "./dist/distractions.png"
     }
   },
   "devDependencies": {
@@ -58,5 +58,8 @@
     "electron-builder": "^21.2.0",
     "tslint": "^5.19.0",
     "typescript": "^3.6"
+  },
+  "dependencies": {
+    "electron-builder-squirrel-windows": "^21.2.0"
   }
 }
