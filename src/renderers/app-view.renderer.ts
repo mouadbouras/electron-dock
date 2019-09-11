@@ -14,11 +14,13 @@ function renderView(event: any, appView: AppView): void {
 }
 
 function save(): void {
-    ipcRenderer.send("edit-view", {
-        viewName : documentHelper.getInputElementById("app-name").value,
-        url : documentHelper.getInputElementById("app-url").value,
-        icon : documentHelper.getInputElementById("app-icon").value,
-    } as AppView);
+    console.log(documentHelper.getInputElementById("img-file").value)
+    
+    // ipcRenderer.send("edit-view", {
+    //     viewName : documentHelper.getInputElementById("app-name").value,
+    //     url : documentHelper.getInputElementById("app-url").value,
+    //     icon : documentHelper.getInputElementById("app-icon").value,
+    // } as AppView);
 }
 
 function close(): void {
